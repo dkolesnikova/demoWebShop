@@ -37,7 +37,7 @@ public class DemoWebShopTests {
                 .body("message", is("The product has been added to your <a href=\"/cart\">shopping cart</a>"));
     }
     @Test
-    void addToCartAnonymTest () {
+    void addToCartAnonymityTest() {
         String body = "product_attribute_72_5_18=65" +
                 "&product_attribute_72_6_19=54" +
                 "&product_attribute_72_3_20=57" +
@@ -54,7 +54,26 @@ public class DemoWebShopTests {
                 .body("success", is(true))
                 .body("message", is("The product has been added to your <a href=\"/cart\">shopping cart</a>"))
                 .body("updatetopcartsectionhtml", is("(3)"));
+    }
+    @Test
+    void  addGiftCardToCertTest(){
+        String cookieValue = "A98006D0403D7109D9F0464FE30D570FA0BC54DC26740E4C0FEE68CFD8861CAA44BD265B9BF34DB2D4E24"+
+                "B44AF029853C2844C85ABA86B5D8E20C901D381C2C3B0AE3AF5A9E2B47493FDCEE722785AF98C586949F1CC02DD25A64BF"+
+                "66189B3090B37DEF0CD338FB3D093B093FD57BD54C9709F24D02AF6A24B37787078B12BB2619EBE9577DD095B30964D076E7"+
+                "C56FE5008740022C8AF3763DF576595420895;";
 
-
+        given()
+                .contentType("application/x-www-form-urlencoded; charset=UTF-8")
+                .cookie("NOPCOMMERCE.AUTH",cookieValue)
+                .body("giftcard_1.RecipientName=ivan&giftcard_1.RecipientEmail=ivanov-9934%40mail.ru&giftcard_1" +
+                        ".SenderName=ivan&giftcard_1.SenderEmail=ivanov-9934%40mail.ru&giftcard_1.Message=hb+qa" +
+                        "+guru&addtocart_1.EnteredQuantity=1")
+                .when()
+                .post("/addproducttocart/details/1/1")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("success", is(true))
+                .body("message", is("The product has been added to your <a href=\"/cart\">shopping cart</a>"));
     }
 }
